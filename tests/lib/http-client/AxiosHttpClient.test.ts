@@ -12,6 +12,10 @@ describe('AxiosHttpClient tests', () => {
     });
 
     describe('get() - ', () => {
+        beforeEach(() => {
+            mockedAxios.get.mockClear();
+        });
+
         describe('given http request succeeds', () => {
             it('should return the response', async () => {
                 const mockedResponse: AxiosResponse = {
