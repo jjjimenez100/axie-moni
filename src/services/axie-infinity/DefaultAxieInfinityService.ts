@@ -14,7 +14,8 @@ export class DefaultAxieInfinityService implements AxieInfinityService {
     ) {}
 
     public async getSlp(roninAddress: string): Promise<SmoothLovePotion> {
-        const getSlpUrl = DefaultAxieInfinityService.GET_SLP_URL.replace(':ronin_address', roninAddress);
+        const convertedRoninAddress = roninAddress.replace('ronin:', '0x');
+        const getSlpUrl = DefaultAxieInfinityService.GET_SLP_URL.replace(':ronin_address', convertedRoninAddress);
         const response = (await this.httpClient.get(getSlpUrl)) as SmoothLovePotionResponse;
 
         return SmoothLovePotion.fromResponse(response);
