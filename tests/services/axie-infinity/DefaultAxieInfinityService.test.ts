@@ -27,7 +27,7 @@ describe('DefaultAxieInfinityService tests', () => {
                 const dummyRoninAddress = 'tessst';
                 const dummySmoothLovePotionResponse: SmoothLovePotionResponse = {
                     total: 12,
-                    last_claimed_at: 12,
+                    last_claimed_item_at: 12,
                     claimable_total: 12,
                 };
                 mockedHttpClient.get.mockResolvedValueOnce(dummySmoothLovePotionResponse);

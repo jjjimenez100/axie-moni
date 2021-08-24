@@ -5,20 +5,16 @@ import { TimezoneNotSupportedError } from '../services/axie-infinity/TimezoneNot
 export interface SmoothLovePotionResponse {
     total: number;
     claimable_total: number;
-    last_claimed_at: number;
+    last_claimed_item_at: number;
 }
 
 export class SmoothLovePotion {
     private static DEFAULT_TIMEZONE = 'Asia/Manila';
     private static SUPPORTED_TIMEZONES: string[] = moment.tz.names();
 
-    private readonly lastClaimedAt: Date;
+    public readonly lastClaimedAt: Date;
 
-    private constructor(
-        private readonly total: number,
-        private readonly claimableTotal: number,
-        lastClaimedAt: number,
-    ) {
+    private constructor(public readonly total: number, public readonly claimableTotal: number, lastClaimedAt: number) {
         this.lastClaimedAt = this.parseTimestamp(lastClaimedAt);
     }
 
@@ -40,7 +36,7 @@ export class SmoothLovePotion {
     }
 
     public static fromResponse(response: SmoothLovePotionResponse): SmoothLovePotion {
-        return new SmoothLovePotion(response.total, response.claimable_total, response.last_claimed_at);
+        return new SmoothLovePotion(response.total, response.claimable_total, response.last_claimed_item_at);
     }
 
     private parseTimestamp(timestamp: number): Date {

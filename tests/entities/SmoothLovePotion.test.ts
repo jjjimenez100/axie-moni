@@ -45,7 +45,7 @@ describe('SmoothLovePotion tests', () => {
             it('should return SmoothLovePotion instance', () => {
                 const smoothLovePotionResponse: SmoothLovePotionResponse = {
                     total: 12,
-                    last_claimed_at: 12,
+                    last_claimed_item_at: 12,
                     claimable_total: 12,
                 };
                 expect(() => SmoothLovePotion.fromResponse(smoothLovePotionResponse)).not.toThrowError();
