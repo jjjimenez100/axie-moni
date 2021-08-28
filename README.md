@@ -1,2 +1,2 @@
-# minimal-node-ts-boilerplate
-Minimal configuration for node ts including eslint and prettier
+# aws-axie
+Axie-infinity services for fetching current SLP <> PHP price, ronin address details, and tracking. Integrated within a personal discord channel.
