@@ -1,7 +1,7 @@
 {
-  "name": "minimal-node-ts-boilerplate",
-  "version": "1.1.0",
-  "description": "Minimal configuration for node ts including eslint and prettier",
+  "name": "aws-axie",
+  "version": "0.0.1",
+  "description": "Axie-infinity services for fetching current SLP <> PHP price, ronin address details, and tracking. Integrated within a personal discord channel.",
   "main": "index.js",
   "dependencies": {
     "@types/coingecko-api": "^1.0.2",
