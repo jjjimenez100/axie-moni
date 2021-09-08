@@ -34,7 +34,7 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 
     const scheduler: Scheduler = new DefaultScheduler();
     const { DISCORD_WEBHOOK = '' } = process.env;
-    const job = scheduler.createJob('* * * * *', async () => {
+    const job = scheduler.createJob('0 * * * *', async () => {
         const currentSlpPrice = await axieService.getSlpPriceInCurrencyOf(Currency.PHP);
         const requestBody = {
             content: `P ${currentSlpPrice}`,
