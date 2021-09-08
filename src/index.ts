@@ -34,13 +34,14 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 
     const scheduler: Scheduler = new DefaultScheduler();
     const { DISCORD_WEBHOOK = '' } = process.env;
-    scheduler.createJob('* * * * *', async () => {
+    const job = scheduler.createJob('* * * * *', async () => {
         const currentSlpPrice = await axieService.getSlpPriceInCurrencyOf(Currency.PHP);
         const requestBody = {
             content: `P ${currentSlpPrice}`,
         };
         await defaultHttpClient.post(DISCORD_WEBHOOK, requestBody);
     });
+    job.start();
 
     const commandList: CommandList = new DiscordCommandList();
     const getSlpPriceCommand: Command<string> = new GetSlpPriceCommand(coingeckoService);
