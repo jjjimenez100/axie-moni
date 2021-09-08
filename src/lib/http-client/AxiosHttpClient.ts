@@ -23,4 +23,14 @@ export class AxiosHttpClient implements HttpClient {
             throw new HttpClientError(url, queryParameters);
         }
     }
+
+    async post(url: string, body?: object): Promise<object> {
+        try {
+            const { data } = await this.axios.post(url, body);
+
+            return data;
+        } catch (error) {
+            throw new HttpClientError(url, body);
+        }
+    }
 }
