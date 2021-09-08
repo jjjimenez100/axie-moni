@@ -70,7 +70,8 @@
     "test": "jest",
     "start": "nodemon index.ts",
     "commit": "cz",
-    "release": "standard-version"
+    "release": "standard-version",
+    "cron:slp-check": "ts-node src/crons/slp-check.ts"
   },
   "gitHooks": {
     "commit-msg": "node scripts/check-commit-message.js"
