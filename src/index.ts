@@ -1,4 +1,6 @@
 import dotenv from 'dotenv';
+dotenv.config();
+
 import { Client, Intents } from 'discord.js';
 import { CoingeckoService } from './services/crypto-currency/CoingeckoService';
 import coinGecko from 'coingecko-api';
@@ -24,10 +26,8 @@ import { Scheduler } from './services/scheduler/Scheduler';
 import { DefaultScheduler } from './services/scheduler/DefaultScheduler';
 import { Currency } from './services/Currency';
 
-dotenv.config();
-
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
-
+console.log('josh DISCORD_TOKEN', DISCORD_TOKEN);
 (async () => {
     const coingeckoService: CryptoCurrencyService = new CoingeckoService(new coinGecko());
     const defaultHttpClient: HttpClient = new AxiosHttpClient(axios);
