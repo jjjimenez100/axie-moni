@@ -1,6 +1,4 @@
 import dotenv from 'dotenv';
-dotenv.config();
-
 import { Client, Intents } from 'discord.js';
 import { CoingeckoService } from './services/crypto-currency/CoingeckoService';
 import coinGecko from 'coingecko-api';
@@ -22,6 +20,11 @@ import { AxieInfinityService } from './services/axie-infinity/AxieInfinityServic
 import { HttpClient } from './lib/http-client/HttpClient';
 import { CryptoCurrencyService } from './services/crypto-currency/CryptoCurrencyService';
 import { DISCORD_TOKEN } from './config/discord';
+import { Scheduler } from './services/scheduler/Scheduler';
+import { DefaultScheduler } from './services/scheduler/DefaultScheduler';
+import { Currency } from './services/Currency';
+
+dotenv.config();
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
@@ -29,6 +32,9 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
     const coingeckoService: CryptoCurrencyService = new CoingeckoService(new coinGecko());
     const defaultHttpClient: HttpClient = new AxiosHttpClient(axios);
     const axieService: AxieInfinityService = new DefaultAxieInfinityService(defaultHttpClient, coingeckoService);
+
+    const scheduler: Scheduler = new DefaultScheduler();
+    scheduler.createJob('* * * * *', () => axieService.getSlpPriceInCurrencyOf(Currency.PHP));
 
     const commandList: CommandList = new DiscordCommandList();
     const getSlpPriceCommand: Command<string> = new GetSlpPriceCommand(coingeckoService);
