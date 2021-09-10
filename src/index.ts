@@ -24,24 +24,37 @@ import { CryptoCurrencyService } from './services/crypto-currency/CryptoCurrency
 import { DISCORD_TOKEN } from './config/discord';
 import { Scheduler } from './services/scheduler/Scheduler';
 import { DefaultScheduler } from './services/scheduler/DefaultScheduler';
-import { Currency } from './services/Currency';
+import {
+    createCheckSlpPriceWithinThresholdCron,
+    CheckSlpPriceDependencies,
+    ValueThreshold,
+} from './crons/check-slp-price-within-threshold';
+import { MAXIMUM_THRESHOLD, MINIMUM_THRESHOLD } from './config/axie';
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 (async () => {
     const coingeckoService: CryptoCurrencyService = new CoingeckoService(new coinGecko());
-    const defaultHttpClient: HttpClient = new AxiosHttpClient(axios);
-    const axieService: AxieInfinityService = new DefaultAxieInfinityService(defaultHttpClient, coingeckoService);
+    const httpClient: HttpClient = new AxiosHttpClient(axios);
+    const axieService: AxieInfinityService = new DefaultAxieInfinityService(httpClient, coingeckoService);
 
     const scheduler: Scheduler = new DefaultScheduler();
+    const logger: Logger = new LoggerImpl();
     const { DISCORD_WEBHOOK = '' } = process.env;
-    const job = scheduler.createJob('0 * * * *', async () => {
-        const currentSlpPrice = await axieService.getSlpPriceInCurrencyOf(Currency.PHP);
-        const requestBody = {
-            content: `P ${currentSlpPrice}`,
-        };
-        await defaultHttpClient.post(DISCORD_WEBHOOK, requestBody);
-    });
-    job.start();
+    const cronDependencies: CheckSlpPriceDependencies = {
+        logger,
+        scheduler,
+        httpClient,
+        axieService,
+    };
+    const thresholds: ValueThreshold = {
+        minimum: MINIMUM_THRESHOLD,
+        maximum: MAXIMUM_THRESHOLD,
+    };
+    const checkSlpPriceWithinThresholdCron = createCheckSlpPriceWithinThresholdCron(
+        cronDependencies,
+        thresholds,
+        DISCORD_WEBHOOK,
+    );
 
     const commandList: CommandList = new DiscordCommandList();
     const getSlpPriceCommand: Command<string> = new GetSlpPriceCommand(coingeckoService);
@@ -49,7 +62,6 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
     const getSlpTotalForRoninAddressCommand: Command<string> = new GetSlpTotalForRoninAddressCommand(axieService);
     commandList.add(getSlpTotalForRoninAddressCommand);
 
-    const logger: Logger = new LoggerImpl();
     const commandManager: DiscordManager = new DefaultDiscordManager(client, logger);
 
     const bootstrap: DiscordService = new DefaultDiscordService(
@@ -59,4 +71,5 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
         '873849375758114837',
     );
     await bootstrap.start(DISCORD_TOKEN);
+    checkSlpPriceWithinThresholdCron.start();
 })();
