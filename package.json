@@ -68,7 +68,8 @@
     "dev": "nodemon --config nodemon.json src/index.ts",
     "dev:debug": "nodemon --config nodemon.json --inspect-brk src/index.ts",
     "test": "jest",
-    "start": "nodemon index.ts",
+    "start:debug": "nodemon index.ts",
+    "start":  "ts-node src/index.ts",
     "commit": "cz",
     "release": "standard-version",
     "cron:slp-check": "ts-node src/crons/slp-check.ts"
